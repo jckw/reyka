@@ -1,8 +1,7 @@
 import React from 'react'
 import { Box, Text, Button, Flex } from 'rebass'
 import { graphql } from 'babel-plugin-relay/macro'
-import { QueryRenderer } from 'react-relay'
-import { commitMutation } from 'react-relay'
+import { QueryRenderer, commitMutation, createRefetchContainer } from 'react-relay'
 import environment from '../relay/environment'
 import { Link } from '@reach/router'
 
@@ -10,6 +9,50 @@ import Card from '../components/Card'
 import ButtonRow from '../components/ButtonRow'
 
 import serve from '../assets/serve.svg'
+
+class QueueLength extends React.Component {
+    componentDidMount() {
+        this.timeout = setInterval(this.refetch, 1000)
+    }
+
+    render() {
+        const queue = this.props.que
+
+        return (
+            <Text fontWeight={700} color="greenGrey" textAlign="center" fontSize="72px">
+                {queue.length}
+            </Text>
+        )
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timeout)
+    }
+
+    refetch = () => {
+        console.log('doing it')
+        this.props.relay.refetch({ queId: this.props.que.id })
+    }
+}
+
+const QueueLengthContainer = createRefetchContainer(
+    QueueLength,
+    {
+        que: graphql`
+            fragment ManageQueue_que on Que {
+                id
+                length(id: $id)
+            }
+        `
+    },
+    graphql`
+        query ManageQueueLengthContainerRefetchQuery($id: ID!) {
+            que(id: $id) {
+                length(id: $id)
+            }
+        }
+    `
+)
 
 class Queue extends React.Component {
     serveSpot = () => {
@@ -31,6 +74,7 @@ class Queue extends React.Component {
             }
         })
     }
+
     render() {
         const id = this.props.queueId
 
@@ -42,6 +86,7 @@ class Queue extends React.Component {
                         que(id: $id) {
                             name
                             length(id: $id)
+                            ...ManageQueue_que
                         }
                     }
                 `}
@@ -76,14 +121,7 @@ class Queue extends React.Component {
                                     <Text fontWeight={600}>Manager mode</Text>
                                 </Box>
                                 <Box py={5} px={4}>
-                                    <Text
-                                        fontWeight={700}
-                                        color="greenGrey"
-                                        textAlign="center"
-                                        fontSize="72px"
-                                    >
-                                        {queue.length}
-                                    </Text>
+                                    <QueueLengthContainer que={queue} />
                                     <Text textAlign="center">people in your queue</Text>
                                 </Box>
                             </Card>
