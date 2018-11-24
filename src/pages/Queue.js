@@ -71,10 +71,6 @@ class Queue extends React.Component {
         })
     }
 
-    showCode = () => {
-        console.log('I am showing the code!')
-    }
-
     render() {
         const id = this.props.queueId
 
@@ -105,6 +101,7 @@ class Queue extends React.Component {
                     }
 
                     const queue = props.que
+                    const isAtFront = this.state.position && this.state.position <= 1
 
                     return (
                         <Flex css={{ maxWidth: 330 }} flexDirection="column" mx="auto">
@@ -129,17 +126,22 @@ class Queue extends React.Component {
                                         textAlign="center"
                                         fontSize="72px"
                                     >
-                                        {this.state.position ? this.state.position - 1 : '...'}
+                                        {isAtFront
+                                            ? `#${this.state.spotId}`
+                                            : this.state.position
+                                            ? this.state.position - 1
+                                            : '...'}
                                     </Text>
-                                    <Text textAlign="center">people in front of you</Text>
+                                    <Text textAlign="center">
+                                        {isAtFront
+                                            ? 'Bring this code to the front'
+                                            : 'people in front of you'}
+                                    </Text>
                                 </Box>
                             </Card>
                             <ButtonRow>
                                 <Button variant="red" onClick={this.leaveQueue}>
                                     <img src={exit} alt="Exit" />
-                                </Button>
-                                <Button variant="green" onClick={this.showCode}>
-                                    <img src={code} alt="Show code" />
                                 </Button>
                             </ButtonRow>
                         </Flex>
