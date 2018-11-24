@@ -7,7 +7,6 @@ export default {
     cards: {
         default: {
             color: '#727D65',
-            backgroundColor: 'white',
             boxShadow: '0 2px 20px -8px rgba(188,188,188,0.50)',
             borderRadius: '38px'
         }

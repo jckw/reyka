@@ -1,0 +1,39 @@
+type Customer {
+  id: ID!
+  spots: [Spot]!
+}
+
+type Manager {
+  id: ID!
+  que: Que
+}
+
+type Mutation {
+  callSpot(spotId: ID): Spot
+  createCustomer: Customer
+  createQue(name: String!): Que
+  createSpot(queId: ID, customerId: ID): Spot
+  serveSpot: Spot
+}
+
+type Que {
+  id: ID!
+  name: String!
+  spots: [Spot]!
+}
+
+type Query {
+  allCustomers: [Customer]!
+  allManagers: [Manager]!
+  allQues: [Que]!
+  allSpots: [Spot]!
+  que(id: ID): Que
+}
+
+type Spot {
+  called: Boolean
+  customer: Customer
+  id: ID
+  que: Que
+  served: Boolean
+}
