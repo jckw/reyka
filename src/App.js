@@ -3,6 +3,7 @@ import { Router } from '@reach/router'
 
 import Home from './pages/Home'
 import CreateQueue from './pages/CreateQueue'
+import Queue from './pages/Queue'
 
 class App extends Component {
     render() {
@@ -11,6 +12,7 @@ class App extends Component {
                 <Router>
                     <Home path="/" />
                     <CreateQueue path="/create" />
+                    <Queue path="/queue/:queueSlug" />
                 </Router>
             </div>
         )
