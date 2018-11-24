@@ -1,5 +1,4 @@
 import React from 'react'
+import { Card as RebassCard } from 'rebass'
 
-export default function Card() {
-    return <div>I'm a card</div>
-}
+export default props => <RebassCard {...props} variant="default" />
