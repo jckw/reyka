@@ -45,7 +45,7 @@ class CreateQueue extends React.Component {
             },
             onCompleted: (response, error) => {
                 if (!error) {
-                    navigate(`/queue/${response.createQue.id}`)
+                    navigate(`/admin/${response.createQue.id}`)
                 }
             }
         })

@@ -9,11 +9,12 @@ type Manager {
 }
 
 type Mutation {
-  callSpot(spotId: ID): Spot
+  callSpot: Spot
   createCustomer: Customer
   createQue(name: String!): Que
   createSpot(queId: ID): Spot
-  serveSpot: Spot
+  leaveSpot(spotId: ID): Spot
+  serveSpot(queId: ID): Spot
 }
 
 type Que {

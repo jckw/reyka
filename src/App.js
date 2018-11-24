@@ -9,6 +9,7 @@ import Home from './pages/Home'
 import CreateQueue from './pages/CreateQueue'
 import Queue from './pages/Queue'
 import NotFound from './pages/NotFound'
+import ManageQueue from './pages/ManageQueue'
 
 class App extends Component {
     render() {
@@ -18,7 +19,8 @@ class App extends Component {
                     <Router>
                         <Home path="/" />
                         <CreateQueue path="/create" />
-                        <Queue path="/queue/:queueSlug" />
+                        <Queue path="/queue/:queueId" />
+                        <ManageQueue path="/admin/:queueId" />
                         <NotFound default />
                     </Router>
                 </Flex>

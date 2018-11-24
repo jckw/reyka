@@ -11,7 +11,7 @@ import ButtonRow from '../components/ButtonRow'
 
 import code from '../assets/code.svg'
 import exit from '../assets/exit.svg'
-import { navigate } from '@reach/router/lib/history';
+import { navigate } from '@reach/router'
 
 class Queue extends React.Component {
     constructor(props) {
@@ -22,10 +22,10 @@ class Queue extends React.Component {
             position: undefined
         }
 
-        this.joinQueue(props.queueSlug)
+        this.joinQueue(props.queueId)
     }
 
-    joinQueue = (queId) => {
+    joinQueue = queId => {
         commitMutation(environment, {
             mutation: graphql`
                 mutation QueueJoinMutation($queId: ID!) {
@@ -52,11 +52,10 @@ class Queue extends React.Component {
     }
 
     leaveQueue = () => {
-        console.log('I am leaving!')
         commitMutation(environment, {
             mutation: graphql`
                 mutation QueueLeaveMutation($spotId: ID!) {
-                    callSpot(spotId: $spotId) {
+                    leaveSpot(spotId: $spotId) {
                         id
                     }
                 }
@@ -66,7 +65,6 @@ class Queue extends React.Component {
             },
             onCompleted: (response, error) => {
                 if (!error) {
-                    console.log('done')
                     navigate('/')
                 }
             }
@@ -78,7 +76,7 @@ class Queue extends React.Component {
     }
 
     render() {
-        const id = this.props.queueSlug
+        const id = this.props.queueId
 
         return (
             <QueryRenderer
@@ -131,7 +129,7 @@ class Queue extends React.Component {
                                         textAlign="center"
                                         fontSize="72px"
                                     >
-                                        {this.state.position ? this.state.position -1 : '...'}
+                                        {this.state.position ? this.state.position - 1 : '...'}
                                     </Text>
                                     <Text textAlign="center">people in front of you</Text>
                                 </Box>
