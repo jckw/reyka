@@ -10,5 +10,21 @@ export default {
             boxShadow: '0 2px 20px -8px rgba(188,188,188,0.50)',
             borderRadius: '38px'
         }
+    },
+    buttons: {
+        green: {
+            borderRadius: '21px',
+            background: '#439D2D',
+            boxShadow: '0 2px 14px -6px rgba(50,96,37,0.50)',
+            height: '97px',
+            width: '97px'
+        },
+        red: {
+            borderRadius: '21px',
+            background: '#D75A59',
+            boxShadow: '0 2px 14px -6px rgba(96,48,37,0.50)',
+            height: '97px',
+            width: '97px'
+        }
     }
 }

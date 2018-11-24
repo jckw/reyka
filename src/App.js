@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Router } from '@reach/router'
 import { ThemeProvider } from 'styled-components'
-import { Box } from 'rebass'
+import { Flex } from 'rebass'
 
 import theme from './theme'
 
@@ -14,14 +14,14 @@ class App extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <Box className="App">
+                <Flex className="App" flexDirection="column" justifyContent="center" css={{minHeight: '100vh'}}>
                     <Router>
                         <Home path="/" />
                         <CreateQueue path="/create" />
                         <Queue path="/queue/:queueSlug" />
                         <NotFound default />
                     </Router>
-                </Box>
+                </Flex>
             </ThemeProvider>
         )
     }

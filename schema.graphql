@@ -12,12 +12,13 @@ type Mutation {
   callSpot(spotId: ID): Spot
   createCustomer: Customer
   createQue(name: String!): Que
-  createSpot(queId: ID, customerId: ID): Spot
+  createSpot(queId: ID): Spot
   serveSpot: Spot
 }
 
 type Que {
   id: ID!
+  length(id: ID): Int!
   name: String!
   spots: [Spot]!
 }
@@ -28,12 +29,14 @@ type Query {
   allQues: [Que]!
   allSpots: [Spot]!
   que(id: ID): Que
+  spot(id: ID): Spot
 }
 
 type Spot {
   called: Boolean
   customer: Customer
   id: ID
+  position(spot_id: ID, que_id: ID): Int!
   que: Que
   served: Boolean
 }
