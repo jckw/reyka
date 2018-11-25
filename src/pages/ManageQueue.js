@@ -3,14 +3,16 @@ import { Box, Text, Button, Flex } from 'rebass'
 import { graphql } from 'babel-plugin-relay/macro'
 import { QueryRenderer, commitMutation, createRefetchContainer } from 'react-relay'
 import environment from '../relay/environment'
-import { Link } from '@reach/router'
+import { Link, navigate } from '@reach/router'
 import Spinner from 'react-spinkit'
 
 import Card from '../components/Card'
 import ButtonRow from '../components/ButtonRow'
+import CardHeader from '../components/CardHeader'
 
 import serve from '../assets/serve.svg'
-import CardHeader from '../components/CardHeader'
+import cog from '../assets/cog.svg'
+import cross from '../assets/cross.svg'
 
 class QueueLength extends React.Component {
     componentDidMount() {
@@ -72,7 +74,53 @@ const QueueLengthContainer = createRefetchContainer(
     `
 )
 
+class Settings extends React.Component {
+    closeQueue = () => {
+        console.log('closing the queue')
+        // do the mutation
+
+        navigate('/')
+    }
+
+    render() {
+        return (
+            <Box
+                css={{
+                    height: '100vh',
+                    width: '100vw',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0
+                }}
+                p={4}
+            >
+                <Flex
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    css={{ height: '100%' }}
+                >
+                    <div style={{ textAlign: 'right' }}>
+                        <img src={cross} alt="close" onClick={this.props.toggleModal} />
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        <Button onClick={this.closeQueue}>Close queue</Button>
+                    </div>
+                </Flex>
+            </Box>
+        )
+    }
+}
+
 class Queue extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            showSettings: false
+        }
+    }
+
     serveSpot = () => {
         commitMutation(environment, {
             mutation: graphql`
@@ -93,59 +141,82 @@ class Queue extends React.Component {
         })
     }
 
+    toggleSettings = () => {
+        console.log('toggling settings')
+        this.setState({ showSettings: !this.state.showSettings })
+    }
+
     render() {
         const id = this.props.queueId
 
         return (
-            <Flex css={{ maxWidth: 330 }} flexDirection="column" mx="auto">
-                <QueryRenderer
-                    environment={environment}
-                    query={graphql`
-                        query ManageQueueQuery($id: ID!) {
-                            que(id: $id) {
-                                name
-                                length
-                                ...ManageQueue_que
+            <React.Fragment>
+                <Flex css={{ maxWidth: 330 }} flexDirection="column" mx="auto">
+                    <QueryRenderer
+                        environment={environment}
+                        query={graphql`
+                            query ManageQueueQuery($id: ID!) {
+                                que(id: $id) {
+                                    name
+                                    length
+                                    ...ManageQueue_que
+                                }
                             }
-                        }
-                    `}
-                    variables={{
-                        id
-                    }}
-                    render={({ props, error }) => {
-                        if (error) {
+                        `}
+                        variables={{
+                            id
+                        }}
+                        render={({ props, error }) => {
+                            if (error) {
+                                return (
+                                    <Flex direction="column">
+                                        Did you want to <Link to="/create">create a queue</Link>?
+                                    </Flex>
+                                )
+                            }
+
+                            if (!props) {
+                                return <Spinner name="wordpress" color="white" />
+                            }
+
+                            const queue = props.que
+
                             return (
-                                <Flex direction="column">
-                                    Did you want to <Link to="/create">create a queue</Link>?
-                                </Flex>
+                                <React.Fragment>
+                                    <div style={{ position: 'relative' }}>
+                                        <Card>
+                                            <CardHeader>
+                                                <Text fontWeight={700}>{queue.name}</Text>
+                                                <Text fontWeight={600}>Manager mode</Text>
+                                            </CardHeader>
+                                            <QueueLengthContainer que={queue} />
+                                            <Box
+                                                css={{
+                                                    position: 'absolute',
+                                                    bottom: 46,
+                                                    right: 32
+                                                }}
+                                            >
+                                                <img
+                                                    src={cog}
+                                                    alt="settings"
+                                                    onClick={this.toggleSettings}
+                                                />
+                                            </Box>
+                                        </Card>
+                                        <ButtonRow>
+                                            <Button variant="green" onClick={this.serveSpot}>
+                                                <img src={serve} alt="Show code" />
+                                            </Button>
+                                        </ButtonRow>
+                                    </div>
+                                </React.Fragment>
                             )
-                        }
-
-                        if (!props) {
-                            return <Spinner name="wordpress" color="white" />
-                        }
-
-                        const queue = props.que
-
-                        return (
-                            <React.Fragment>
-                                <Card>
-                                    <CardHeader>
-                                        <Text fontWeight={700}>{queue.name}</Text>
-                                        <Text fontWeight={600}>Manager mode</Text>
-                                    </CardHeader>
-                                    <QueueLengthContainer que={queue} />
-                                </Card>
-                                <ButtonRow>
-                                    <Button variant="green" onClick={this.serveSpot}>
-                                        <img src={serve} alt="Show code" />
-                                    </Button>
-                                </ButtonRow>
-                            </React.Fragment>
-                        )
-                    }}
-                />
-            </Flex>
+                        }}
+                    />
+                </Flex>
+                {this.state.showSettings && <Settings toggleModal={this.toggleSettings} />}
+            </React.Fragment>
         )
     }
 }
