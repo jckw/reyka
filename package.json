@@ -9,6 +9,7 @@
         "react-dom": "^16.6.3",
         "react-relay": "^1.7.0",
         "react-scripts": "2.1.1",
+        "react-spinkit": "^3.0.0",
         "rebass": "^3.0.0-11",
         "styled-components": "^4.1.1"
     },

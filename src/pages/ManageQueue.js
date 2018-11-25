@@ -9,6 +9,7 @@ import Card from '../components/Card'
 import ButtonRow from '../components/ButtonRow'
 
 import serve from '../assets/serve.svg'
+import CardHeader from '../components/CardHeader'
 
 class QueueLength extends React.Component {
     componentDidMount() {
@@ -41,14 +42,14 @@ const QueueLengthContainer = createRefetchContainer(
         que: graphql`
             fragment ManageQueue_que on Que {
                 id
-                length(id: $id)
+                length
             }
         `
     },
     graphql`
         query ManageQueueLengthContainerRefetchQuery($id: ID!) {
             que(id: $id) {
-                length(id: $id)
+                length
             }
         }
     `
@@ -79,61 +80,58 @@ class Queue extends React.Component {
         const id = this.props.queueId
 
         return (
-            <QueryRenderer
-                environment={environment}
-                query={graphql`
-                    query ManageQueueQuery($id: ID!) {
-                        que(id: $id) {
-                            name
-                            length(id: $id)
-                            ...ManageQueue_que
+            <Flex css={{ maxWidth: 330 }} flexDirection="column" mx="auto">
+                <QueryRenderer
+                    environment={environment}
+                    query={graphql`
+                        query ManageQueueQuery($id: ID!) {
+                            que(id: $id) {
+                                name
+                                length
+                                ...ManageQueue_que
+                            }
                         }
-                    }
-                `}
-                variables={{
-                    id
-                }}
-                render={({ props, error }) => {
-                    if (error) {
+                    `}
+                    variables={{
+                        id
+                    }}
+                    render={({ props, error }) => {
+                        if (error) {
+                            return (
+                                <Flex direction="column">
+                                    Did you want to <Link to="/create">create a queue</Link>?
+                                </Flex>
+                            )
+                        }
+
+                        if (!props) {
+                            return <div>Loading...</div>
+                        }
+
+                        const queue = props.que
+
                         return (
-                            <Flex direction="column">
-                                Did you want to <Link to="/create">create a queue</Link>?
-                            </Flex>
+                            <React.Fragment>
+                                <Card>
+                                    <CardHeader>
+                                        <Text fontWeight={700}>{queue.name}</Text>
+                                        <Text fontWeight={600}>Manager mode</Text>
+                                    </CardHeader>
+                                    <Box py={5} px={4}>
+                                        <QueueLengthContainer que={queue} />
+                                        <Text textAlign="center">people in your queue</Text>
+                                    </Box>
+                                </Card>
+                                <ButtonRow>
+                                    <Button variant="green" onClick={this.serveSpot}>
+                                        <img src={serve} alt="Show code" />
+                                    </Button>
+                                </ButtonRow>
+                            </React.Fragment>
                         )
-                    }
-
-                    if (!props) {
-                        return <div>Loading...</div>
-                    }
-
-                    const queue = props.que
-
-                    return (
-                        <Flex css={{ maxWidth: 330 }} flexDirection="column" mx="auto">
-                            <Card>
-                                <Box
-                                    bg="deepGreen"
-                                    css={{ borderRadius: '38px 38px 0 0' }}
-                                    py={3}
-                                    px={4}
-                                >
-                                    <Text fontWeight={700}>{queue.name}</Text>
-                                    <Text fontWeight={600}>Manager mode</Text>
-                                </Box>
-                                <Box py={5} px={4}>
-                                    <QueueLengthContainer que={queue} />
-                                    <Text textAlign="center">people in your queue</Text>
-                                </Box>
-                            </Card>
-                            <ButtonRow>
-                                <Button variant="green" onClick={this.serveSpot}>
-                                    <img src={serve} alt="Show code" />
-                                </Button>
-                            </ButtonRow>
-                        </Flex>
-                    )
-                }}
-            />
+                    }}
+                />
+            </Flex>
         )
     }
 }

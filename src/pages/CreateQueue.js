@@ -6,6 +6,7 @@ import { navigate } from '@reach/router'
 import { Flex, Text, Button } from 'rebass'
 import styled from 'styled-components'
 import ButtonRow from '../components/ButtonRow'
+import Spinner from 'react-spinkit'
 
 import Card from '../components/Card'
 import theme from '../theme'
@@ -25,7 +26,8 @@ class CreateQueue extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            name: ''
+            name: '',
+            isLoading: false
         }
     }
 
@@ -45,6 +47,10 @@ class CreateQueue extends React.Component {
             },
             onCompleted: (response, error) => {
                 if (!error) {
+                    console.log('loading!')
+                    this.setState({
+                        isLoading: true
+                    })
                     navigate(`/admin/${response.createQue.id}`)
                 }
             }
@@ -77,7 +83,7 @@ class CreateQueue extends React.Component {
                 </Card>
                 <ButtonRow>
                     <Button variant="green" onClick={this._onSubmit}>
-                        <img src={tick} alt="Create queue" />
+                        {this.state.isLoading ? <Spinner name="wordpress" color="white" /> : <img src={tick} alt="Create queue" />}
                     </Button>
                 </ButtonRow>
             </Flex>

@@ -15,12 +15,14 @@ type Mutation {
   createSpot(queId: ID): Spot
   leaveSpot(spotId: ID): Spot
   serveSpot(queId: ID): Spot
+  signInMannager: SigninPayload
 }
 
 type Que {
   id: ID!
-  length(id: ID): Int!
+  length: Int!
   name: String!
+  next: Spot
   spots: [Spot]!
 }
 
@@ -31,6 +33,11 @@ type Query {
   allSpots: [Spot]!
   que(id: ID): Que
   spot(id: ID): Spot
+}
+
+type SigninPayload {
+  manager: Manager
+  token: String
 }
 
 type Spot {
