@@ -20,9 +20,19 @@ class QueueLength extends React.Component {
         const queue = this.props.que
 
         return (
-            <Text fontWeight={700} color="greenGrey" textAlign="center" fontSize="72px">
-                {queue.length}
-            </Text>
+            <Box py={5} px={4}>
+                <Text fontWeight={700} color="greenGrey" textAlign="center" fontSize="72px">
+                    {queue.length}
+                </Text>
+                <Text textAlign="center">
+                    {queue.length === 1 ? 'person' : 'people'} in your queue
+                </Text>
+                <Text textAlign="center" mt={2}>
+                    {queue.next
+                        ? `Your next customer is #${queue.next.id}`
+                        : 'No further customers'}
+                </Text>
+            </Box>
         )
     }
 
@@ -43,6 +53,9 @@ const QueueLengthContainer = createRefetchContainer(
             fragment ManageQueue_que on Que {
                 id
                 length
+                next {
+                    id
+                }
             }
         `
     },
@@ -50,6 +63,9 @@ const QueueLengthContainer = createRefetchContainer(
         query ManageQueueLengthContainerRefetchQuery($id: ID!) {
             que(id: $id) {
                 length
+                next {
+                    id
+                }
             }
         }
     `
@@ -117,10 +133,7 @@ class Queue extends React.Component {
                                         <Text fontWeight={700}>{queue.name}</Text>
                                         <Text fontWeight={600}>Manager mode</Text>
                                     </CardHeader>
-                                    <Box py={5} px={4}>
-                                        <QueueLengthContainer que={queue} />
-                                        <Text textAlign="center">people in your queue</Text>
-                                    </Box>
+                                    <QueueLengthContainer que={queue} />
                                 </Card>
                                 <ButtonRow>
                                     <Button variant="green" onClick={this.serveSpot}>
