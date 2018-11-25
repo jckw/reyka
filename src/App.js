@@ -16,13 +16,13 @@ class App extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <React.Fragment>
+                <Flex css={{minHeight: '100vh', flex:0}} flexDirection="column">
                     <Header />
                     <Flex
                         className="App"
                         flexDirection="column"
                         justifyContent="center"
-                        css={{ minHeight: '100vh' }}
+                        css={{flex: 1}}
                     >
                         <Router>
                             <Home path="/" />
@@ -32,7 +32,7 @@ class App extends Component {
                             <NotFound default />
                         </Router>
                     </Flex>
-                </React.Fragment>
+                </Flex>
             </ThemeProvider>
         )
     }

@@ -17,7 +17,8 @@ export default {
             background: '#439D2D',
             boxShadow: '0 2px 14px -6px rgba(50,96,37,0.50)',
             height: '97px',
-            width: '97px'
+            width: '97px',
+            overflow: 'hidden'
         },
         red: {
             borderRadius: '21px',

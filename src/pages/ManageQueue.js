@@ -4,6 +4,7 @@ import { graphql } from 'babel-plugin-relay/macro'
 import { QueryRenderer, commitMutation, createRefetchContainer } from 'react-relay'
 import environment from '../relay/environment'
 import { Link } from '@reach/router'
+import Spinner from 'react-spinkit'
 
 import Card from '../components/Card'
 import ButtonRow from '../components/ButtonRow'
@@ -121,7 +122,7 @@ class Queue extends React.Component {
                         }
 
                         if (!props) {
-                            return <div>Loading...</div>
+                            return <Spinner name="wordpress" color="white" />
                         }
 
                         const queue = props.que

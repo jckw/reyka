@@ -1,5 +1,6 @@
 import React from 'react'
 import { navigate } from '@reach/router'
+import logo from '../assets/logo.png'
 
 class Home extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ class Home extends React.Component {
                         flexDirection: 'column'
                     }}
                 >
+                    <img src={logo} style={{ marginBottom: '64px', marginLeft: 'auto', marginRight: 'auto', width: '250px' }} alt="logo" />
                     <input
                         type="text"
                         value={this.state.word1}
@@ -53,6 +55,7 @@ class Home extends React.Component {
                             display: 'block',
                             marginBottom: '18px'
                         }}
+                        placeholder="Queue ID"
                     />
                     <input
                         type="submit"
